@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/lib.js"></script>
+    <script>
+        let ballArray = [];
+        let colorArray = ["red", "orange", "yellow", "green", "blue", "navy", "purple"];
+        let starArray = ["☆", "＃", "＆", "＊", "＠", "§", "※"];
+        //아래의 단위는 물체자체가 아니라, 장차 물체를 생성해
+        //낼수있는 거푸집니다
+        //it분야에서는 이러한 거푸집을  클래스라 한다
+        class Ball {
+            //객체 중심 적인 측면에서 본다면 아래의 변수들은
+            //ball꺼다 ball은 사람도 아니고 생물이 아니므로
+            //this대명사를 이용한다
+            //java,C#등의 완전한 언어에서는 아래의 코드가 올바르지만
+            //js에서는 객체가 보유한 멤버변수의 선언은 
+            //constructor() 생성자 메서드에 정의할것을 강제하고 있다
+
+            //문서내에 공을 생성하여 날아가게~
+            //일반적으로 객체지향에서의 생성자 메서드란,
+            //객체가 거푸집으로부터 태어날때 호출되는 메서드이며
+            // 이메서드는 해당 객체의 개성을 부여할 수 있는
+            //역할을 수행한다.
+            constructor(bg, x, y, velX, velY, star) {
+                //멤버변수3개를 정의한다
+                //객체가 보유한 변수를 멤버변수라 하고 이 멤버변수
+                //전역,지역이라는 말을 붙이지 않는다
+                //그럼 멤버변수는 언제 태어나서 언제까지 살아갈까?
+                //객체의 인스턴스와 그 생명을 함께한다.
+                this.div;
+                this.x = x;
+                this.y = y;
+                this.bg = bg;
+                this.velX = velX;//x축으로의 속도
+                this.velY = velY;
+                this.star = star;
+                this.ro = 0;
+                this.div = document.createElement("div");
+                this.div.style.width = 50 + "px";
+                this.div.style.height = 50 + "px";
+                this.div.style.background = this.bg;
+                this.div.style.borderRadius = 50 + "%";
+                this.div.innerText = this.star;
+                this.div.style.fontSize = 45 + "px";
+                this.div.style.position = "absolute";
+                this.div.style.left = this.x + "px";
+                this.div.style.top = this.y + "px";
+                document.body.appendChild(this.div);
+
+            }
+            // 생성된 공을 움직이자
+            move() {
+                this.x = this.x + this.velX;
+                this.y = this.y + this.velY;
+                this.div.style.left = this.x + "px";
+                this.div.style.top = this.y + "px";
+                this.ro += 2;
+                this.div.style.transform = "rotate("+this.ro+"deg)";
+            }
+        }
+        //우리가 위에서 정의한 거푸집인 ball클래스로부터
+        //버튼을 누를때마다 인스턴스를 생성하자
+        //인스턴스를 생성할때 사용되는 연산자를 new연산자라 한다
+        //java,C#등 현존하는 대부분의 객체지향언어에서도 마찬가지
+        function createBall() {
+            // 객체라 할지라도 기존언어의 문자,숫자,논리값을 그대로
+            //보유하며 단지 여기에다 함수가 추가된 것 뿐이다
+
+            let x = getRandom(50 + 1);//랜덤한 x축값
+            let y = 100 + getRandom(100 + 1);//랜덤한 y축값
+            let r = getRandom(colorArray.length);
+            let velX = getRandomByRange(1, 5);
+            let velY = getRandomByRange(1, 5);
+            let s = getRandom(starArray.length);
+
+            let ball = new Ball(colorArray[r], x, y, velX, velY, starArray[s]);
+            ballArray.push(ball);
+        }
+        function loop() {
+            //문서에 등장한 모든 공을 대상으로 반복문 돌리면서
+            //각 공이 보유한 move()메서드를 호출
+            for (let i = 0; i < ballArray.length; i++) {
+                ballArray[i].move();
+            }
+        }
+        addEventListener("load", function () {
+            setInterval("loop()", 10);
+        });
+    </script>
+</head>
+
+<body>
+    <button onClick="createBall()">공생성</button>
+</body>
+
+</html>
